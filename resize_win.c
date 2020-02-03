@@ -15,7 +15,7 @@
 #define VERTICAL 	(1)
 
 static char *directions[4] = { "top", "bottom", "left", "right" };
-static int verbose = 1;
+static int verbose = 0;
 
 struct state {
 	int selectedChild;
@@ -137,5 +137,6 @@ int main(int argc, char *argv[]) {
 	process_t p = process(bspc);
 	close(p.fd_read); close(p.fd_write);
 	wait(NULL);
+	free(s);
 	return 0;
 }
