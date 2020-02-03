@@ -15,7 +15,7 @@
 #define VERTICAL 	(1)
 
 static char *directions[4] = { "top", "bottom", "left", "right" };
-static int verbose = 0;
+static int verbose = 1;
 
 struct state {
 	int selectedChild;
@@ -121,47 +121,15 @@ int main(int argc, char *argv[]) {
 	struct state *s = getState(dir);
 	if (verbose) printf("split: %d\tselected: %d\tchild 1: %d,\tchild2: %d\n", s->splitType, s->selectedChild, s->child1, s->child2);
 	switch (s->splitType) {
-		case HORIZONTAL: //horizontal
-			if (verbose) printf("Horizontal split, ");
-			x = 0;
-			switch (dir) {
-				case UP: // up
-					if (verbose) printf("moving up.");
-					y = -20;
-					dir = s->child1 == s->selectedChild ? DOWN : UP;
-					break;
-				case DOWN: // down
-					if (verbose) printf("moving down.");
-					y = 20;
-					dir = s->child1 == s->selectedChild ? DOWN : UP;
-					break;
-				default:
-					fprintf(stderr, "Invalid direction!\n");
-					goto exit;
-			}
+		case HORIZONTAL:
+			x = 0, y = dir == UP ? -20 : 20;
+			dir = s->child1 == s->selectedChild ? DOWN : UP;
 			break;
-		case VERTICAL: // vertical
-			if (verbose) printf("Vertical split, ");
-			y = 0;
-			switch (dir) {
-				case LEFT: // left
-					if (verbose) printf("moving left.");
-					x = -20;
-					dir = s->child1 == s->selectedChild ? RIGHT : LEFT;
-					break;
-				case RIGHT: // right
-					if (verbose) printf("moving right.");
-					x = 20;
-					dir = s->child1 == s->selectedChild ? RIGHT : LEFT;
-					break;
-				default:
-					fprintf(stderr, "Invalid direction!!\n");
-					goto exit;
-			}
+		case VERTICAL:
+			y = 0, x = dir == LEFT ? -20 : 20;
+			dir = s->child1 == s->selectedChild ? RIGHT : LEFT;
 			break;
 	}
-	if (verbose) printf("\n");
-
 	char xTxt[10], yTxt[10];
 	sprintf(xTxt, "%d", x); sprintf(yTxt, "%d", y);
 	char *bspc[] = { "bspc", "node", "-z", directions[dir-1], xTxt, yTxt, NULL };
@@ -170,7 +138,4 @@ int main(int argc, char *argv[]) {
 	close(p.fd_read); close(p.fd_write);
 	wait(NULL);
 	return 0;
-exit:
-	free(s);
-	return 1;
 }
