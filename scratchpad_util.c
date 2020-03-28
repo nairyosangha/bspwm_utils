@@ -84,7 +84,7 @@ void addMissingWindows()
 
 
 int main() {
-	char *config_home = getenv("XDG_CONFIG_HOME");
+	char *config_home = getenv("XDG_CACHE_HOME");
 	char config_path[100];
 	snprintf(config_path, sizeof(config_path), "%s/%s", config_home, CONFIG_FILE);
 	scratchpad_t *s = readData(config_path);
